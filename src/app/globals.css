@@ -5,16 +5,16 @@
   --color-primary-red: #ff3366;
   --color-primary-blue: #33bbff;
   --color-accent-purple: #9d4edd;
-  
+
   --color-text-main: #e2e8f0;
   --color-text-muted: #94a3b8;
-  
+
   --color-card-bg: rgba(255, 255, 255, 0.03);
   --color-card-border: rgba(255, 255, 255, 0.08);
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  
+
   /* Animations */
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -95,18 +95,29 @@ button {
 }
 
 @keyframes float {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(5%, 10%) scale(1.1); }
-  66% { transform: translate(-5%, 5%) scale(0.9); }
-  100% { transform: translate(10%, -5%) scale(1.05); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(5%, 10%) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-5%, 5%) scale(0.9);
+  }
+
+  100% {
+    transform: translate(10%, -5%) scale(1.05);
+  }
 }
 
 /* Glassmorphism Card System */
 .glass-card {
   background: var(--color-card-bg);
   border: 1px solid var(--color-card-border);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 24px;
   transition: var(--transition-smooth);
@@ -116,7 +127,7 @@ button {
   background: rgba(255, 255, 255, 0.05);
   border-color: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
-  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.3);
 }
 
 /* Base button */
@@ -155,6 +166,7 @@ button {
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, #fff, #94a3b8);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-bottom: 24px;
 }
@@ -162,5 +174,697 @@ button {
 .text-gradient {
   background: linear-gradient(135deg, var(--color-primary-red), var(--color-primary-blue));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* ===== Shared Layout Classes ===== */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: start;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.text-center {
+  text-center: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.sticky-top {
+  position: sticky;
+  top: 24px;
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.gap-4 {
+  gap: 4px;
+}
+
+.gap-8 {
+  gap: 8px;
+}
+
+.gap-12 {
+  gap: 12px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.gap-24 {
+  gap: 24px;
+}
+
+.mb-4 {
+  margin-bottom: 4px;
+}
+
+.mb-8 {
+  margin-bottom: 8px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-24 {
+  margin-bottom: 24px;
+}
+
+.mb-32 {
+  margin-bottom: 32px;
+}
+
+.mt-auto {
+  margin-top: auto;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mt-32 {
+  margin-top: 32px;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-500 {
+  max-width: 500px;
+}
+
+.max-w-800 {
+  max-width: 800px;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ===== Color Utility Classes ===== */
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-white {
+  color: white;
+}
+
+.text-red {
+  color: var(--color-primary-red);
+}
+
+.text-blue {
+  color: var(--color-primary-blue);
+}
+
+.text-purple {
+  color: var(--color-accent-purple);
+}
+
+/* ===== Font Sizes ===== */
+.text-xs {
+  font-size: 0.85rem;
+}
+
+.text-sm {
+  font-size: 0.9rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-md {
+  font-size: 1.1rem;
+}
+
+.text-lg {
+  font-size: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 2rem;
+}
+
+.text-3xl {
+  font-size: 2.5rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.leading-relaxed {
+  line-height: 1.6;
+}
+
+.leading-loose {
+  line-height: 1.8;
+}
+
+/* ===== Dashboard Page ===== */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.icon-btn-round {
+  padding: 12px;
+  border-radius: 50%;
+  display: flex;
+}
+
+.welcome-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.note-card-link {
+  display: flex;
+  flex-direction: column;
+  min-height: 160px;
+}
+
+.note-card-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.note-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  color: var(--color-primary-red);
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 24px 0 16px;
+  color: var(--color-text-muted);
+}
+
+.nav-link-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.quiz-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+}
+
+/* ===== New Note Page ===== */
+.create-note-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.create-note-heading {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.create-note-desc {
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+.form-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.field-label-split {
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-hint {
+  color: var(--color-primary-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.input-dark {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-card-border);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.textarea-dark {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-card-border);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  transition: var(--transition-smooth);
+}
+
+.submit-btn-end {
+  margin-top: 16px;
+  align-self: flex-end;
+}
+
+.submit-btn-disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ===== Note Workspace Page ===== */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 24px;
+  align-items: start;
+}
+
+.workspace-heading {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.nav-link-back-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.section-icon-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.section-icon-header-sm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.content-panel {
+  padding: 32px;
+}
+
+.note-content-display {
+  white-space: pre-wrap;
+  color: var(--color-text-main);
+  line-height: 1.8;
+}
+
+.concept-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.concept-name {
+  display: block;
+  color: var(--color-primary-blue);
+  margin-bottom: 4px;
+}
+
+.concepts-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* ===== Chat Interface ===== */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.chat-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-card-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-empty-state {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: auto;
+}
+
+.chat-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 85%;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.chat-bubble-user {
+  align-self: flex-end;
+  background: var(--color-primary-blue);
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble-ai {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-loading {
+  align-self: flex-start;
+  color: var(--color-text-muted);
+}
+
+.chat-loading-spinner {
+  display: inline-block;
+}
+
+.chat-input-form {
+  display: flex;
+  padding: 12px;
+  border-top: 1px solid var(--color-card-border);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  outline: none;
+  font-size: 0.9rem;
+  padding: 0 8px;
+}
+
+.chat-send-btn {
+  padding: 8px;
+  transition: color 0.2s;
+}
+
+.chat-send-active {
+  color: var(--color-primary-blue);
+}
+
+.chat-send-inactive {
+  color: var(--color-text-muted);
+}
+
+/* ===== Quizzes Hub Page ===== */
+.quizzes-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.quizzes-heading {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.quizzes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.quiz-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px;
+  opacity: 0.7;
+}
+
+.quiz-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+/* ===== Active Quiz Page ===== */
+.quiz-finished-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.quiz-finished-card {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  padding: 48px;
+}
+
+.quiz-finished-heading {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.quiz-finished-score {
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+  margin-bottom: 32px;
+}
+
+.quiz-finished-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.quiz-finished-link {
+  padding: 12px 24px;
+  font-weight: 600;
+}
+
+.quiz-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.quiz-progress-badge {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.quiz-question-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.quiz-question-text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.quiz-option-btn {
+  padding: 20px;
+  border-radius: 16px;
+  color: white;
+  font-size: 1rem;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.quiz-option-btn[disabled] {
+  cursor: default;
+}
+
+.quiz-option-correct {
+  background: rgba(51, 187, 255, 0.2);
+  border: 1px solid var(--color-primary-blue);
+}
+
+.quiz-option-wrong {
+  background: rgba(255, 51, 102, 0.2);
+  border: 1px solid var(--color-primary-red);
+}
+
+.quiz-option-default {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--color-card-border);
+}
+
+.quiz-option-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.quiz-next-container {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.quiz-next-btn {
+  padding: 12px 32px;
 }

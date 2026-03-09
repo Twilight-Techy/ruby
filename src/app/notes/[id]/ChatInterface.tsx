@@ -41,17 +41,17 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
     }
 
     return (
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', height: '400px', padding: 0, overflow: 'hidden' }}>
+        <div className="glass-card chat-container">
             {/* Header */}
-            <div style={{ padding: '16px', borderBottom: '1px solid var(--color-card-border)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div className="chat-header">
                 <ChatTeardropText size={20} color="var(--color-accent-purple)" weight="fill" />
-                <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Chat with Notes</h3>
+                <h3 className="text-base font-semibold">Chat with Notes</h3>
             </div>
 
             {/* Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="chat-messages">
                 {messages.length === 0 && (
-                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', textAlign: 'center', margin: 'auto' }}>
+                    <p className="chat-empty-state">
                         Ask anything about these lecture notes!
                     </p>
                 )}
@@ -61,25 +61,15 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
                         key={idx}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        style={{
-                            alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                            background: m.role === 'user' ? 'var(--color-primary-blue)' : 'rgba(255,255,255,0.1)',
-                            padding: '10px 14px',
-                            borderRadius: '16px',
-                            borderBottomRightRadius: m.role === 'user' ? '4px' : '16px',
-                            borderBottomLeftRadius: m.role === 'ai' ? '4px' : '16px',
-                            maxWidth: '85%',
-                            fontSize: '0.9rem',
-                            lineHeight: '1.4'
-                        }}
+                        className={`chat-bubble ${m.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`}
                     >
                         {m.text}
                     </motion.div>
                 ))}
 
                 {isLoading && (
-                    <div style={{ alignSelf: 'flex-start', color: 'var(--color-text-muted)' }}>
-                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} style={{ display: 'inline-block' }}>
+                    <div className="chat-loading">
+                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="chat-loading-spinner">
                             <CircleNotch size={16} />
                         </motion.div>
                     </div>
@@ -87,23 +77,15 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
             </div>
 
             {/* Input Form */}
-            <form onSubmit={handleSend} style={{ display: 'flex', padding: '12px', borderTop: '1px solid var(--color-card-border)', background: 'rgba(0,0,0,0.2)' }}>
+            <form onSubmit={handleSend} className="chat-input-form">
                 <input
                     type="text"
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Ask a question..."
-                    style={{
-                        flex: 1,
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'white',
-                        outline: 'none',
-                        fontSize: '0.9rem',
-                        padding: '0 8px'
-                    }}
+                    className="chat-input"
                 />
-                <button type="submit" style={{ color: input.trim() ? 'var(--color-primary-blue)' : 'var(--color-text-muted)', padding: '8px', transition: 'color 0.2s' }}>
+                <button type="submit" title="Send message" aria-label="Send message" className={`chat-send-btn ${input.trim() ? 'chat-send-active' : 'chat-send-inactive'}`}>
                     <PaperPlaneRight size={20} weight="fill" />
                 </button>
             </form>

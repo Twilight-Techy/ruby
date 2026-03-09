@@ -35,47 +35,36 @@ export default function NewNotePage() {
 
     return (
         <main className="page-container">
-            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-muted)', marginBottom: '32px', fontWeight: 500 }}>
+            <Link href="/" className="nav-link-back">
                 <CaretLeft weight="bold" /> Back to Dashboard
             </Link>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-card"
-                style={{ maxWidth: '800px', margin: '0 auto' }}
+                className="glass-card create-note-container"
             >
-                <h1 className="heading-xl" style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Create Note</h1>
-                <p style={{ color: 'var(--color-text-muted)', marginBottom: '32px' }}>Write or paste your lecture content below. Our AI will automatically extract key concepts and generate a summary.</p>
+                <h1 className="heading-xl create-note-heading">Create Note</h1>
+                <p className="create-note-desc">Write or paste your lecture content below. Our AI will automatically extract key concepts and generate a summary.</p>
 
-                <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <label htmlFor="title" style={{ fontWeight: 600, fontSize: '0.9rem' }}>Title</label>
+                <form onSubmit={handleSave} className="form-vertical">
+                    <div className="field-group">
+                        <label htmlFor="title" className="field-label">Title</label>
                         <input
                             id="title"
                             type="text"
                             placeholder="e.g. Introduction to Quantum Mechanics"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '16px',
-                                borderRadius: '12px',
-                                background: 'rgba(0,0,0,0.2)',
-                                border: '1px solid var(--color-card-border)',
-                                color: 'white',
-                                fontSize: '1rem',
-                                outline: 'none',
-                                transition: 'var(--transition-smooth)'
-                            }}
+                            className="input-dark"
                             required
                         />
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <label htmlFor="content" style={{ fontWeight: 600, fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between' }}>
+                    <div className="field-group">
+                        <label htmlFor="content" className="field-label-split">
                             <span>Content</span>
-                            <button type="button" style={{ color: 'var(--color-primary-blue)', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem' }}>
+                            <button type="button" className="upload-hint">
                                 <UploadSimple /> Upload Instead (Coming Soon)
                             </button>
                         </label>
@@ -85,27 +74,14 @@ export default function NewNotePage() {
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             rows={12}
-                            style={{
-                                width: '100%',
-                                padding: '16px',
-                                borderRadius: '12px',
-                                background: 'rgba(0,0,0,0.2)',
-                                border: '1px solid var(--color-card-border)',
-                                color: 'white',
-                                fontSize: '1rem',
-                                outline: 'none',
-                                resize: 'vertical',
-                                fontFamily: 'inherit',
-                                transition: 'var(--transition-smooth)'
-                            }}
+                            className="textarea-dark"
                             required
                         />
                     </div>
 
                     <button
                         type="submit"
-                        className="btn-primary"
-                        style={{ marginTop: '16px', alignSelf: 'flex-end', opacity: isGenerating ? 0.7 : 1, pointerEvents: isGenerating ? 'none' : 'auto' }}
+                        className={`btn-primary submit-btn-end ${isGenerating ? 'submit-btn-disabled' : ''}`}
                     >
                         {isGenerating ? (
                             <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>

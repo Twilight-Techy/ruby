@@ -10,23 +10,23 @@ export default async function Home() {
 
   return (
     <main className="page-container">
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', marginTop: '20px' }}>
-        <h1 className="heading-xl" style={{ margin: 0 }}>Smart Notes</h1>
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <button className="glass-card" style={{ padding: '12px', borderRadius: '50%', display: 'flex' }}>
+      <header className="dashboard-header">
+        <h1 className="heading-xl no-margin">Smart Notes</h1>
+        <div className="flex-row gap-16">
+          <button className="glass-card icon-btn-round" title="User Profile" aria-label="User Profile">
             <Student size={24} color="var(--color-primary-blue)" weight="fill" />
           </button>
         </div>
       </header>
 
-      <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      <section className="flex-col gap-24">
+        <div className="glass-card welcome-card">
           <div>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '8px' }}>Welcome back!</h2>
-            <p style={{ color: 'var(--color-text-muted)' }}>You have {allNotes.length} notes and {allQuizzes.length} quizzes ready.</p>
+            <h2 className="text-xl font-semibold mb-8">Welcome back!</h2>
+            <p className="text-muted">You have {allNotes.length} notes and {allQuizzes.length} quizzes ready.</p>
           </div>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <Link href="/quizzes" className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px' }}>
+          <div className="flex-row gap-12">
+            <Link href="/quizzes" className="glass-card quiz-nav-link">
               <Exam size={20} color="var(--color-accent-purple)" />
               My Quizzes
             </Link>
@@ -38,21 +38,21 @@ export default async function Home() {
         </div>
 
         <div>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 600, margin: '24px 0 16px', color: 'var(--color-text-muted)' }}>Recent Notes</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+          <h3 className="section-title">Recent Notes</h3>
+          <div className="notes-grid">
             {allNotes.length === 0 ? (
-              <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '160px', opacity: 0.7, borderStyle: 'dashed' }}>
-                <Note size={32} color="var(--color-text-muted)" style={{ marginBottom: '12px' }} />
-                <p style={{ color: 'var(--color-text-muted)' }}>No notes yet. Create one!</p>
+              <div className="glass-card note-card-empty">
+                <Note size={32} color="var(--color-text-muted)" className="mb-12" />
+                <p className="text-muted">No notes yet. Create one!</p>
               </div>
             ) : (
               allNotes.map(n => (
-                <Link key={n.id} href={`/notes/${n.id}`} className="glass-card" style={{ display: 'flex', flexDirection: 'column', minHeight: '160px' }}>
-                  <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '8px' }}>{n.title}</h4>
-                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: 'auto' }}>
+                <Link key={n.id} href={`/notes/${n.id}`} className="glass-card note-card-link">
+                  <h4 className="text-md font-bold mb-8">{n.title}</h4>
+                  <p className="text-muted text-sm mb-auto">
                     {n.summary ? (n.summary.substring(0, 100) + '...') : 'No summary'}
                   </p>
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', color: 'var(--color-primary-red)' }}>
+                  <div className="note-card-footer">
                     <Note size={24} weight="duotone" />
                   </div>
                 </Link>

@@ -13,7 +13,6 @@ interface PageProps {
 export default async function NoteWorkspacePage({ params }: PageProps) {
     const noteId = params.id;
 
-    // Direct DB Queries (Server Component)
     const noteData = await db.select().from(notes).where(eq(notes.id, noteId)).limit(1);
     const note = noteData[0];
 
@@ -25,54 +24,54 @@ export default async function NoteWorkspacePage({ params }: PageProps) {
     const quizData = await db.select().from(quizzes).where(eq(quizzes.noteId, noteId)).limit(1);
 
     return (
-        <main className="page-container" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '24px', alignItems: 'start' }}>
+        <main className="page-container workspace-grid">
 
             {/* Left Column: Workspace Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="flex-col gap-24">
                 <header>
-                    <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--color-text-muted)', marginBottom: '16px', fontWeight: 500 }}>
+                    <Link href="/" className="nav-link-back-sm">
                         <CaretLeft weight="bold" /> Back to Dashboard
                     </Link>
-                    <h1 className="heading-xl" style={{ fontSize: '2rem', marginBottom: '8px' }}>{note.title}</h1>
-                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem' }}>
+                    <h1 className="heading-xl workspace-heading">{note.title}</h1>
+                    <p className="text-muted text-sm">
                         Generated on {new Date(note.createdAt).toLocaleDateString()}
                     </p>
                 </header>
 
                 {/* Note Content Panel */}
-                <section className="glass-card" style={{ padding: '32px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px', color: 'var(--color-primary-blue)' }}>
+                <section className="glass-card content-panel">
+                    <div className="section-icon-header text-blue">
                         <TextT size={24} weight="bold" />
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white' }}>Original Notes</h2>
+                        <h2 className="text-lg font-semibold text-white">Original Notes</h2>
                     </div>
-                    <div style={{ whiteSpace: 'pre-wrap', color: 'var(--color-text-main)', lineHeight: '1.8' }}>
+                    <div className="note-content-display">
                         {note.content}
                     </div>
                 </section>
             </div>
 
             {/* Right Column: AI Insights & Chat */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', position: 'sticky', top: '24px' }}>
+            <div className="flex-col gap-24 sticky-top">
 
                 {/* AI Summary Card */}
                 <div className="glass-card">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: 'var(--color-primary-red)' }}>
+                    <div className="section-icon-header-sm text-red">
                         <Lightbulb size={24} weight="fill" />
-                        <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'white' }}>AI Summary</h2>
+                        <h2 className="text-lg font-semibold text-white">AI Summary</h2>
                     </div>
-                    <p style={{ color: 'var(--color-text-main)', lineHeight: '1.6', fontSize: '0.95rem' }}>
+                    <p className="leading-relaxed text-sm">
                         {note.summary}
                     </p>
                 </div>
 
                 {/* Key Concepts */}
-                <div className="glass-card" style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                    <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'white', marginBottom: '16px' }}>Key Concepts</h2>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="glass-card concepts-scroll">
+                    <h2 className="text-md font-semibold text-white mb-16">Key Concepts</h2>
+                    <div className="flex-col gap-12">
                         {conceptsData.map(c => (
-                            <div key={c.id} style={{ background: 'rgba(255,255,255,0.05)', padding: '12px', borderRadius: '12px' }}>
-                                <strong style={{ display: 'block', color: 'var(--color-primary-blue)', marginBottom: '4px' }}>{c.concept}</strong>
-                                <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>{c.explanation}</span>
+                            <div key={c.id} className="concept-item">
+                                <strong className="concept-name">{c.concept}</strong>
+                                <span className="text-xs text-muted">{c.explanation}</span>
                             </div>
                         ))}
                     </div>
