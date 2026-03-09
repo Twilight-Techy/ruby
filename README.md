@@ -78,8 +78,8 @@ Tired of re-reading your notes for hours? **Ruby does the heavy lifting.**
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/your-username/ruby-smart-notes.git
-cd ruby-smart-notes
+git clone https://github.com/twilight-techy/ruby.git
+cd ruby
 npm install
 ```
 
@@ -179,6 +179,6 @@ src/
 
 Made with ❤️ + 🤖 + ☕
 
-**[⭐ Star this repo if it helped you study smarter!](https://github.com/your-username/ruby-smart-notes)**
+**[⭐ Star this repo if it helped you study smarter!](https://github.com/twilight-techy/ruby)**
 
 </div>
