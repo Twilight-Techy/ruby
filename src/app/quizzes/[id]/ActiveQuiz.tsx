@@ -47,7 +47,7 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     quizId: quiz.id,
-                    score: `${score + (String(selectedOption) === currentQ.correctOptionIndex ? 1 : 0)}/${questions.length}`,
+                    score: `${score}/${questions.length}`,
                 }),
             });
         } catch (err) {
