@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CaretLeft, CheckCircle, Question, Exam } from '@phosphor-icons/react/dist/ssr';
+import { CaretLeft, CheckCircle, Play } from '@phosphor-icons/react/dist/ssr';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
@@ -45,30 +45,15 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
             await fetch('/api/quizzes/score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ quizId: quiz.id, score: `${score + (String(selectedOption) === currentQ.correctOptionIndex ? 1 : 0)}/${questions.length}` })
+                body: JSON.stringify({
+                    quizId: quiz.id,
+                    score: `${score + (String(selectedOption) === currentQ.correctOptionIndex ? 1 : 0)}/${questions.length}`,
+                }),
             });
         } catch (err) {
             console.error(err);
         }
     };
-
-    if (isFinished) {
-        return (
-            <main className="page-container quiz-finished-container">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-card quiz-finished-card">
-                    <CheckCircle size={64} color="var(--color-primary-blue)" weight="fill" className="mb-24" />
-                    <h1 className="heading-xl quiz-finished-heading">Quiz Complete!</h1>
-                    <p className="quiz-finished-score">
-                        You scored {score} out of {questions.length}.
-                    </p>
-                    <div className="quiz-finished-actions">
-                        <Link href={`/notes/${quiz.noteId}`} className="glass-card quiz-finished-link">Back to Note</Link>
-                        <Link href="/quizzes" className="btn-primary">View All Quizzes</Link>
-                    </div>
-                </motion.div>
-            </main>
-        );
-    }
 
     const getOptionClass = (idx: number) => {
         if (!isAnswered) return 'quiz-option-btn quiz-option-default';
@@ -79,6 +64,25 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
         return 'quiz-option-btn quiz-option-default';
     };
 
+    if (isFinished) {
+        const pct = Math.round((score / questions.length) * 100);
+        return (
+            <main className="page-container quiz-finished-container">
+                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-card quiz-finished-card">
+                    <CheckCircle size={56} color={pct >= 70 ? 'var(--color-success)' : 'var(--color-primary-blue)'} weight="fill" className="mb-16" />
+                    <h1 className="heading-xl quiz-finished-heading">Quiz Complete!</h1>
+                    <p className="quiz-finished-score">
+                        You scored <strong>{score}</strong> out of <strong>{questions.length}</strong> ({pct}%)
+                    </p>
+                    <div className="quiz-finished-actions">
+                        <Link href={`/notes/${quiz.noteId}`} className="btn-ghost quiz-finished-link">Back to Note</Link>
+                        <Link href="/quizzes" className="btn-primary">All Quizzes</Link>
+                    </div>
+                </motion.div>
+            </main>
+        );
+    }
+
     return (
         <main className="page-container">
             <Link href="/quizzes" className="nav-link-back">
@@ -86,26 +90,24 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
             </Link>
 
             <div className="quiz-progress-header">
-                <h1 className="heading-xl text-2xl no-margin">{quiz.title}</h1>
+                <h1 className="heading-lg no-margin">{quiz.title}</h1>
                 <div className="quiz-progress-badge">
-                    Question {currentIndex + 1} of {questions.length}
+                    {currentIndex + 1} / {questions.length}
                 </div>
             </div>
 
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentIndex}
-                    initial={{ x: 50, opacity: 0 }}
+                    initial={{ x: 40, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -50, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
+                    exit={{ x: -40, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
                     className="glass-card quiz-question-card"
                 >
-                    <h2 className="quiz-question-text">
-                        {currentQ.questionText}
-                    </h2>
+                    <h2 className="quiz-question-text">{currentQ.questionText}</h2>
 
-                    <div className="flex-col gap-16">
+                    <div className="flex-col gap-12">
                         {currentQ.options.map((opt: string, idx: number) => (
                             <button
                                 key={idx}
@@ -113,9 +115,7 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
                                 className={getOptionClass(idx)}
                                 disabled={isAnswered}
                             >
-                                <div className="quiz-option-letter">
-                                    {String.fromCharCode(65 + idx)}
-                                </div>
+                                <div className="quiz-option-letter">{String.fromCharCode(65 + idx)}</div>
                                 {opt}
                             </button>
                         ))}
@@ -124,7 +124,7 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
                     {isAnswered && (
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="quiz-next-container">
                             <button onClick={nextQuestion} className="btn-primary quiz-next-btn">
-                                {currentIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
+                                {currentIndex < questions.length - 1 ? 'Next' : 'Finish'} <Play size={16} weight="fill" />
                             </button>
                         </motion.div>
                     )}

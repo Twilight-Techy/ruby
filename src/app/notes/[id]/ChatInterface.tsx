@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChatTeardropText, PaperPlaneRight, CircleNotch } from '@phosphor-icons/react/dist/ssr';
 import { motion } from 'framer-motion';
 
@@ -10,9 +10,16 @@ interface Props {
 }
 
 export default function ChatInterface({ noteId, noteContext }: Props) {
-    const [messages, setMessages] = useState<{ role: 'user' | 'ai', text: string }[]>([]);
+    const [messages, setMessages] = useState<{ role: 'user' | 'ai'; text: string }[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     async function handleSend(e: React.FormEvent) {
         e.preventDefault();
@@ -27,14 +34,12 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
             const res = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ noteId, noteContext, message: userMsg, history: messages })
+                body: JSON.stringify({ noteId, noteContext, message: userMsg, history: messages }),
             });
             const data = await res.json();
-
             setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
-        } catch (err) {
-            console.error(err);
-            setMessages(prev => [...prev, { role: 'ai', text: 'Sorry, I encountered an error connecting to the AI.' }]);
+        } catch {
+            setMessages(prev => [...prev, { role: 'ai', text: 'Sorry, something went wrong.' }]);
         } finally {
             setIsLoading(false);
         }
@@ -42,24 +47,20 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
 
     return (
         <div className="glass-card chat-container">
-            {/* Header */}
             <div className="chat-header">
-                <ChatTeardropText size={20} color="var(--color-accent-purple)" weight="fill" />
-                <h3 className="text-base font-semibold">Chat with Notes</h3>
+                <ChatTeardropText size={18} color="var(--color-accent-purple)" weight="fill" />
+                <span className="heading-md">Ask your Notes</span>
             </div>
 
-            {/* Messages */}
-            <div className="chat-messages">
+            <div className="chat-messages" ref={scrollRef}>
                 {messages.length === 0 && (
-                    <p className="chat-empty-state">
-                        Ask anything about these lecture notes!
-                    </p>
+                    <p className="chat-empty-state">Ask anything about your lecture notes!</p>
                 )}
 
                 {messages.map((m, idx) => (
                     <motion.div
                         key={idx}
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         className={`chat-bubble ${m.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`}
                     >
@@ -76,7 +77,6 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
                 )}
             </div>
 
-            {/* Input Form */}
             <form onSubmit={handleSend} className="chat-input-form">
                 <input
                     type="text"
@@ -86,7 +86,7 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
                     className="chat-input"
                 />
                 <button type="submit" title="Send message" aria-label="Send message" className={`chat-send-btn ${input.trim() ? 'chat-send-active' : 'chat-send-inactive'}`}>
-                    <PaperPlaneRight size={20} weight="fill" />
+                    <PaperPlaneRight size={18} weight="fill" />
                 </button>
             </form>
         </div>

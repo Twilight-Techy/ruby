@@ -20,31 +20,32 @@ export default async function QuizzesPage() {
     return (
         <main className="page-container">
             <Link href="/" className="nav-link-back">
-                <CaretLeft weight="bold" /> Back to Dashboard
+                <CaretLeft weight="bold" /> Back
             </Link>
 
             <div className="quizzes-header">
-                <Exam size={40} color="var(--color-primary-blue)" weight="duotone" />
-                <h1 className="heading-xl quizzes-heading">Your Quizzes</h1>
+                <Exam size={32} color="var(--color-primary-blue)" weight="duotone" />
+                <h1 className="heading-xl quizzes-heading">Quizzes</h1>
             </div>
 
             <div className="quizzes-grid">
                 {allQuizzes.length === 0 ? (
                     <div className="glass-card quiz-empty-state">
-                        <p>No quizzes found. Creating a note will automatically generate a quiz!</p>
+                        <Exam size={40} color="var(--color-text-muted)" />
+                        <p className="text-muted text-sm mt-12">No quizzes yet. Create a note to auto-generate one!</p>
                     </div>
                 ) : (
                     allQuizzes.map(quiz => (
                         <div key={quiz.id} className="glass-card quiz-card">
-                            <h2 className="text-lg font-semibold text-white mb-8">{quiz.title}</h2>
-                            <p className="text-red text-sm mb-16">Based on: {quiz.noteTitle}</p>
+                            <h2 className="heading-md mb-4">{quiz.title}</h2>
+                            <p className="text-sm text-muted mb-8">From: {quiz.noteTitle}</p>
 
                             <div className="quiz-card-footer">
-                                <span className="text-muted text-sm">
-                                    {quiz.score ? `Score: ${quiz.score}` : 'Not taken yet'}
+                                <span className="text-xs text-muted">
+                                    {quiz.score ? `Score: ${quiz.score}` : 'Not taken'}
                                 </span>
                                 <Link href={`/quizzes/${quiz.id}`} className="btn-primary btn-sm">
-                                    {quiz.score ? 'Retake' : 'Start'} <Play weight="fill" />
+                                    {quiz.score ? 'Retake' : 'Start'} <Play size={14} weight="fill" />
                                 </Link>
                             </div>
                         </div>

@@ -1,12 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
+import { ThemeProvider } from '@/lib/ThemeProvider';
 
 export const metadata: Metadata = {
   title: 'Ruby Smart Notes',
-  description: 'AI-Powered Smart Notes',
+  description: 'AI-Powered Smart Notes – Summarize, Quiz, and Chat with your lecture notes.',
 };
 
 export default function RootLayout({
@@ -15,13 +13,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <div className="fluid-bg-container">
-          <div className="blob-red"></div>
-          <div className="blob-blue"></div>
-        </div>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <div className="fluid-bg-container">
+            <div className="blob-red"></div>
+            <div className="blob-blue"></div>
+          </div>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
