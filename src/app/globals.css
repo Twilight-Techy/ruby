@@ -72,12 +72,6 @@
   opacity: 0.06;
 }
 
-[data-theme="light"] .heading-xl {
-  background: linear-gradient(135deg, #1e293b, #475569);
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 [data-theme="light"] .input-dark,
 [data-theme="light"] .textarea-dark {
   background: rgba(0, 0, 0, 0.03);

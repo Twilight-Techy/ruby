@@ -67,7 +67,7 @@ export default function Home() {
   return (
     <main className="page-container">
       <header className="dashboard-header">
-        <h1 className="heading-xl no-margin">Ruby</h1>
+        <h1 className="heading-xl no-margin">Ruby Smart Notes</h1>
         <div className="flex-row items-center gap-12">
           <button
             className="glass-card icon-btn-round"
