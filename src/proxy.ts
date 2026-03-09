@@ -6,7 +6,7 @@ export const proxy = auth.middleware({
 
 export const config = {
     matcher: [
-        // Match all paths except static files and auth API
-        "/((?!_next/static|_next/image|favicon.ico|api/auth).*)",
+        // Match page routes only — exclude static files, auth API, and all other API routes
+        "/((?!_next/static|_next/image|favicon.ico|icon.png|api/).*)",
     ],
 };

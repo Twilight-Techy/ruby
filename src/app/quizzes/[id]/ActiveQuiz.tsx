@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CaretLeft, CheckCircle, Play } from '@phosphor-icons/react/dist/ssr';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { authFetch } from '@/lib/authFetch';
 
 interface Props {
     quiz: any;
@@ -42,7 +43,7 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
 
     const submitScore = async () => {
         try {
-            await fetch('/api/quizzes/score', {
+            await authFetch('/api/quizzes/score', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

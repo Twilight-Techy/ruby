@@ -5,6 +5,7 @@ import { CaretLeft, Lightbulb, TextAlignLeft, Exam, PencilSimple, Check, X, Care
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatInterface from './ChatInterface';
+import { authFetch } from '@/lib/authFetch';
 
 interface Props {
     note: any;
@@ -23,7 +24,7 @@ export default function NoteWorkspaceClient({ note: initialNote, concepts, quiz 
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            const res = await fetch(`/api/notes/${note.id}`, {
+            const res = await authFetch(`/api/notes/${note.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title: editTitle, content: editContent }),

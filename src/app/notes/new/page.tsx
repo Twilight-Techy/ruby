@@ -6,6 +6,7 @@ import { CaretLeft, Sparkle, CloudArrowUp, File, X, Keyboard, CircleNotch, Image
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { authClient } from '@/lib/auth-client';
+import { authFetch } from '@/lib/authFetch';
 
 const TEXT_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.log'];
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
@@ -111,7 +112,7 @@ export default function NewNotePage() {
         setIsGenerating(true);
 
         try {
-            const res = await fetch('/api/notes', {
+            const res = await authFetch('/api/notes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ title, content }),

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ChatTeardropText, PaperPlaneRight, CircleNotch } from '@phosphor-icons/react/dist/ssr';
+import { authFetch } from '@/lib/authFetch';
 import { motion } from 'framer-motion';
 
 interface Props {
@@ -18,7 +19,7 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
     useEffect(() => {
         async function fetchHistory() {
             try {
-                const res = await fetch(`/api/chat/history?noteId=${noteId}`);
+                const res = await authFetch(`/api/chat/history?noteId=${noteId}`);
                 const data = await res.json();
                 if (data.history) {
                     setMessages(data.history);
@@ -47,7 +48,7 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
         setIsLoading(true);
 
         try {
-            const res = await fetch('/api/chat', {
+            const res = await authFetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ noteId, noteContext, message: userMsg, history: messages }),
