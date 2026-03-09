@@ -673,76 +673,130 @@ button {
   pointer-events: none;
 }
 
-/* ==== NOTE WORKSPACE ==== */
-.workspace-layout {
+/* ==== NOTE WORKSPACE V2 ==== */
+.workspace-layout-v2 {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
-@media (min-width: 768px) {
-  .workspace-layout {
+@media (min-width: 1024px) {
+  .workspace-layout-v2 {
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 24px;
+    grid-template-columns: 1fr 400px;
+    gap: 32px;
     align-items: start;
   }
 }
 
-.workspace-heading {
-  font-size: clamp(1.3rem, 4vw, 2rem);
-  margin-bottom: 4px;
-}
-
-.content-panel {
-  padding: 24px;
-}
-
-.section-icon-header {
+.workspace-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.note-content-display {
+.ai-analysis-column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.workspace-title-section {
+  margin-bottom: 8px;
+}
+
+.ai-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .ai-content-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ai-content-grid {
+    grid-template-columns: 1fr;
+    /* Stack in sidebar if needed, but here it's main col */
+  }
+
+  .workspace-layout-v2[data-sidebar-open="false"] .ai-content-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Original Note Sidebar */
+.original-note-sidebar {
+  transition: all var(--transition-normal);
+}
+
+.note-sidebar-card {
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.note-sidebar-header {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition-fast);
+}
+
+.note-sidebar-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.note-sidebar-content {
+  padding: 20px;
+  overflow: hidden;
+}
+
+.note-text-display {
   white-space: pre-wrap;
   color: var(--color-text-secondary);
   line-height: 1.8;
   font-size: 0.95rem;
+  max-height: 600px;
+  overflow-y: auto;
 }
 
-.sidebar-stack {
+.note-edit-area {
+  min-height: 400px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.concepts-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
-@media (min-width: 768px) {
-  .sidebar-stack {
-    position: sticky;
-    top: 20px;
-  }
+.icon-btn-sm {
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--color-text-muted);
+  transition: all var(--transition-fast);
 }
 
-.concept-item {
-  background: rgba(255, 255, 255, 0.04);
-  padding: 14px;
-  border-radius: var(--radius-sm);
-  border-left: 3px solid var(--color-primary-blue);
-}
-
-.concept-name {
-  display: block;
-  color: var(--color-primary-blue);
-  font-weight: 600;
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
-
-.concepts-scroll {
-  max-height: 280px;
-  overflow-y: auto;
+.icon-btn-sm:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 /* ==== CHAT ==== */
@@ -1125,4 +1179,14 @@ button {
 
 .text-error {
   color: var(--color-error);
+}
+
+.items-center {
+  align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .workspace-layout-v2:not(.note-closed) .ai-content-grid {
+    grid-template-columns: 1fr;
+  }
 }
