@@ -80,7 +80,20 @@ export async function POST(req: Request) {
 
         if (fileType === 'office') {
             // Use officeparser for DOCX, PPTX, XLSX
-            const text = String(await parseOffice(buffer));
+            // parseOffice in v6 may return a result object or string, extract text safely
+            const result = await parseOffice(buffer);
+            console.log('[officeparser] result type:', typeof result, '| keys:', result && typeof result === 'object' ? Object.keys(result) : 'N/A');
+            let text: string;
+            if (typeof result === 'string') {
+                text = result;
+            } else if (result && typeof (result as any).text === 'string') {
+                text = (result as any).text;
+            } else if (result && typeof (result as any).value === 'string') {
+                text = (result as any).value;
+            } else {
+                // Last resort: serialize as readable JSON
+                text = JSON.stringify(result, null, 2);
+            }
 
             if (!text || !text.trim()) {
                 return NextResponse.json({ error: 'No text could be extracted from this document' }, { status: 422 });
