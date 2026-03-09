@@ -11,11 +11,9 @@ interface PageProps {
 }
 
 export default async function QuizPage({ params }: PageProps) {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    });
+    const { data: session } = await auth.getSession();
 
-    if (!session) {
+    if (!session?.user) {
         const { id } = await params;
         redirect(`/login?next=/quizzes/${id}`);
     }

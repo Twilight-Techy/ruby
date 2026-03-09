@@ -7,11 +7,9 @@ import { headers } from 'next/headers';
 
 export async function GET() {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers()
-        });
+        const { data: session } = await auth.getSession();
 
-        if (!session) {
+        if (!session?.user) {
             return NextResponse.json({ notes: [], quizCount: 0, unauthorized: true });
         }
 

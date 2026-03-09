@@ -39,12 +39,12 @@ export default function NewNotePage() {
 
     // Redirect if not logged in
     useEffect(() => {
-        if (!isSessionPending && !session) {
+        if (!isSessionPending && !session?.user) {
             router.push('/login?next=/notes/new');
         }
     }, [session, isSessionPending, router]);
 
-    if (isSessionPending || !session) {
+    if (isSessionPending || !session?.user) {
         return (
             <div className="page-container flex-col items-center justify-center min-h-[60vh]">
                 <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2 }} className="text-blue">

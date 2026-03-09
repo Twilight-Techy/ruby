@@ -7,11 +7,9 @@ import { eq, and } from 'drizzle-orm';
 
 export async function POST(req: Request) {
     try {
-        const session = await auth.api.getSession({
-            headers: await headers()
-        });
+        const { data: session } = await auth.getSession();
 
-        if (!session) {
+        if (!session?.user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 

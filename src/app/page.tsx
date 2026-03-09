@@ -27,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       if (isPending) return;
-      if (!session) {
+      if (!session?.user) {
         setLoading(false);
         return;
       }

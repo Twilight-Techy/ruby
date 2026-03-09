@@ -21,16 +21,18 @@ export default function LoginPage() {
 
         try {
             if (isSignUp) {
-                await authClient.signUp.email({
+                const { error: signUpError } = await authClient.signUp.email({
                     email,
                     password,
                     name: email.split('@')[0],
                 });
+                if (signUpError) throw signUpError;
             } else {
-                await authClient.signIn.email({
+                const { error: signInError } = await authClient.signIn.email({
                     email,
                     password,
                 });
+                if (signInError) throw signInError;
             }
             router.push('/');
         } catch (err: any) {
@@ -43,6 +45,7 @@ export default function LoginPage() {
     const handleSocialAuth = async (provider: 'google' | 'github') => {
         await authClient.signIn.social({
             provider,
+            callbackURL: '/',
         });
     };
 

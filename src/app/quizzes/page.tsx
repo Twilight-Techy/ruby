@@ -8,11 +8,9 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function QuizzesPage() {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    });
+    const { data: session } = await auth.getSession();
 
-    if (!session) {
+    if (!session?.user) {
         redirect('/login?next=/quizzes');
     }
 
