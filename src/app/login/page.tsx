@@ -123,7 +123,7 @@ export default function LoginPage() {
 
                 <footer className="mt-32 text-center text-sm">
                     <p className="text-muted">
-                        {isSignUp ? 'Already have an account?' : 'Need an account?'}
+                        {isSignUp ? 'Already have an account? ' : 'Need an account? '}
                         <button
                             onClick={() => setIsSignUp(!isSignUp)}
                             className="text-blue font-semibold ml-4 hover:underline"
