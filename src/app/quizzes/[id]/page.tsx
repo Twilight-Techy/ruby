@@ -5,11 +5,11 @@ import { eq } from 'drizzle-orm';
 import ActiveQuiz from './ActiveQuiz';
 
 interface PageProps {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function QuizPage({ params }: PageProps) {
-    const quizId = params.id;
+    const { id: quizId } = await params;
 
     const quizData = await db.select().from(quizzes).where(eq(quizzes.id, quizId)).limit(1);
     const quiz = quizData[0];

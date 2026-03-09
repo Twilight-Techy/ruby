@@ -7,11 +7,11 @@ import Link from 'next/link';
 import ChatInterface from './ChatInterface';
 
 interface PageProps {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function NoteWorkspacePage({ params }: PageProps) {
-    const noteId = params.id;
+    const { id: noteId } = await params;
 
     const noteData = await db.select().from(notes).where(eq(notes.id, noteId)).limit(1);
     const note = noteData[0];

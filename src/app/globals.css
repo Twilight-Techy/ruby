@@ -1116,3 +1116,13 @@ button {
 .leading-tall {
   line-height: 1.7;
 }
+
+.upload-zone-processing {
+  pointer-events: none;
+  border-color: var(--color-primary-blue);
+  background: rgba(0, 194, 255, 0.04);
+}
+
+.text-error {
+  color: var(--color-error);
+}
