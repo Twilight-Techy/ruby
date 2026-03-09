@@ -21,8 +21,8 @@ export default function ActiveQuiz({ quiz, questions }: Props) {
 
     const handleSelect = (idx: number) => {
         if (isAnswered) return;
-        setSelectedOption(idx);
         setIsAnswered(true);
+        setSelectedOption(idx);
 
         if (String(idx) === currentQ.correctOptionIndex) {
             setScore(s => s + 1);

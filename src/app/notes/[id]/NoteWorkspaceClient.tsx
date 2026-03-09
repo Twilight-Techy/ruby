@@ -40,7 +40,7 @@ export default function NoteWorkspaceClient({ note: initialNote, concepts, quiz 
     };
 
     return (
-        <main className="page-container workspace-container">
+        <main className="page-container workspace-page-container">
             <div className="workspace-header">
                 <Link href="/" className="nav-link-back no-margin">
                     <CaretLeft weight="bold" /> Back

@@ -117,14 +117,7 @@ export default function LoginPage() {
                         aria-label="Sign in with Google"
                     >
                         <GoogleLogo size={20} weight="bold" />
-                    </button>
-                    <button
-                        onClick={() => handleSocialAuth('github')}
-                        className="btn-ghost flex-1 py-12 px-0 justify-center"
-                        title="Sign in with GitHub"
-                        aria-label="Sign in with GitHub"
-                    >
-                        <GithubLogo size={20} weight="bold" />
+                        <span className="text-sm font-semibold ml-8">Google</span>
                     </button>
                 </div>
 

@@ -59,7 +59,7 @@ export async function POST(req: Request) {
             content: aiResponse,
         });
 
-        return NextResponse.json({ response: aiResponse });
+        return NextResponse.json({ reply: aiResponse });
     } catch (error) {
         console.error('Chat API Error:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
