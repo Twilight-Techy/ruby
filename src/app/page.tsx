@@ -1,66 +1,66 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import { Plus, Note, Student, Exam } from '@phosphor-icons/react/dist/ssr';
+import { db } from '@/lib/db';
+import { notes, quizzes } from '@/lib/schema';
+import { desc } from 'drizzle-orm';
 
-export default function Home() {
+export default async function Home() {
+  const allNotes = await db.select().from(notes).orderBy(desc(notes.createdAt)).limit(6);
+  const allQuizzes = await db.select().from(quizzes);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="page-container">
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', marginTop: '20px' }}>
+        <h1 className="heading-xl" style={{ margin: 0 }}>Smart Notes</h1>
+        <div style={{ display: 'flex', gap: '16px' }}>
+          <button className="glass-card" style={{ padding: '12px', borderRadius: '50%', display: 'flex' }}>
+            <Student size={24} color="var(--color-primary-blue)" weight="fill" />
+          </button>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '8px' }}>Welcome back!</h2>
+            <p style={{ color: 'var(--color-text-muted)' }}>You have {allNotes.length} notes and {allQuizzes.length} quizzes ready.</p>
+          </div>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <Link href="/quizzes" className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px 24px' }}>
+              <Exam size={20} color="var(--color-accent-purple)" />
+              My Quizzes
+            </Link>
+            <Link href="/notes/new" className="btn-primary">
+              <Plus size={20} weight="bold" />
+              New Note
+            </Link>
+          </div>
         </div>
-      </main>
-    </div>
+
+        <div>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 600, margin: '24px 0 16px', color: 'var(--color-text-muted)' }}>Recent Notes</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {allNotes.length === 0 ? (
+              <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '160px', opacity: 0.7, borderStyle: 'dashed' }}>
+                <Note size={32} color="var(--color-text-muted)" style={{ marginBottom: '12px' }} />
+                <p style={{ color: 'var(--color-text-muted)' }}>No notes yet. Create one!</p>
+              </div>
+            ) : (
+              allNotes.map(n => (
+                <Link key={n.id} href={`/notes/${n.id}`} className="glass-card" style={{ display: 'flex', flexDirection: 'column', minHeight: '160px' }}>
+                  <h4 style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '8px' }}>{n.title}</h4>
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginBottom: 'auto' }}>
+                    {n.summary ? (n.summary.substring(0, 100) + '...') : 'No summary'}
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', color: 'var(--color-primary-red)' }}>
+                    <Note size={24} weight="duotone" />
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
