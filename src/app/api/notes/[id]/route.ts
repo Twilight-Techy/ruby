@@ -1,13 +1,23 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { notes } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export async function PATCH(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { id } = await params;
         const { title, content } = await req.json();
 
@@ -17,7 +27,7 @@ export async function PATCH(
 
         await db.update(notes)
             .set({ title, content, updatedAt: new Date() })
-            .where(eq(notes.id, id));
+            .where(and(eq(notes.id, id), eq(notes.userId, session.user.id)));
 
         return NextResponse.json({ success: true });
     } catch (error) {

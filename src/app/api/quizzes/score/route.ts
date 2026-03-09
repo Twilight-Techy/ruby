@@ -1,17 +1,29 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { quizzes } from '@/lib/schema';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export async function POST(req: Request) {
     try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
         const { quizId, score } = await req.json();
 
         if (!quizId || !score) {
             return NextResponse.json({ error: 'Quiz ID and Score are required' }, { status: 400 });
         }
 
-        await db.update(quizzes).set({ score }).where(eq(quizzes.id, quizId));
+        await db.update(quizzes)
+            .set({ score })
+            .where(and(eq(quizzes.id, quizId), eq(quizzes.userId, session.user.id)));
 
         return NextResponse.json({ success: true });
     } catch (error) {

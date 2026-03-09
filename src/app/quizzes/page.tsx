@@ -1,10 +1,21 @@
 import { db } from '@/lib/db';
 import { quizzes, notes } from '@/lib/schema';
-import { desc, eq } from 'drizzle-orm';
-import { CaretLeft, Exam, Play } from '@phosphor-icons/react/dist/ssr';
+import { desc, eq, and } from 'drizzle-orm';
+import { CaretLeft, Exam, Play, SignIn } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function QuizzesPage() {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session) {
+        redirect('/login?next=/quizzes');
+    }
+
     const allQuizzes = await db
         .select({
             id: quizzes.id,
@@ -15,6 +26,7 @@ export default async function QuizzesPage() {
         })
         .from(quizzes)
         .innerJoin(notes, eq(quizzes.noteId, notes.id))
+        .where(eq(quizzes.userId, session.user.id))
         .orderBy(desc(quizzes.createdAt));
 
     return (

@@ -10,10 +10,25 @@ interface Props {
 }
 
 export default function ChatInterface({ noteId, noteContext }: Props) {
-    const [messages, setMessages] = useState<{ role: 'user' | 'ai'; text: string }[]>([]);
+    const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        async function fetchHistory() {
+            try {
+                const res = await fetch(`/api/chat/history?noteId=${noteId}`);
+                const data = await res.json();
+                if (data.history) {
+                    setMessages(data.history);
+                }
+            } catch (err) {
+                console.error('Failed to fetch chat history:', err);
+            }
+        }
+        fetchHistory();
+    }, [noteId]);
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -26,7 +41,8 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
         if (!input.trim() || isLoading) return;
 
         const userMsg = input.trim();
-        setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+        const optimisticMsg = { role: 'user' as const, content: userMsg };
+        setMessages(prev => [...prev, optimisticMsg]);
         setInput('');
         setIsLoading(true);
 
@@ -37,9 +53,11 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
                 body: JSON.stringify({ noteId, noteContext, message: userMsg, history: messages }),
             });
             const data = await res.json();
-            setMessages(prev => [...prev, { role: 'ai', text: data.reply }]);
+            if (data.reply) {
+                setMessages(prev => [...prev, { role: 'ai', content: data.reply }]);
+            }
         } catch {
-            setMessages(prev => [...prev, { role: 'ai', text: 'Sorry, something went wrong.' }]);
+            setMessages(prev => [...prev, { role: 'ai', content: 'Sorry, something went wrong.' }]);
         } finally {
             setIsLoading(false);
         }
@@ -64,7 +82,7 @@ export default function ChatInterface({ noteId, noteContext }: Props) {
                         animate={{ opacity: 1, y: 0 }}
                         className={`chat-bubble ${m.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai'}`}
                     >
-                        {m.text}
+                        {m.content}
                     </motion.div>
                 ))}
 

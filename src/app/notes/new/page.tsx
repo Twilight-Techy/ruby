@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CaretLeft, Sparkle, CloudArrowUp, File, X, Keyboard, CircleNotch, Image, FilePdf, FileDoc } from '@phosphor-icons/react/dist/ssr';
+import { CaretLeft, Sparkle, CloudArrowUp, File, X, Keyboard, CircleNotch, Image, FilePdf, FileDoc, Plus } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { authClient } from '@/lib/auth-client';
 
 const TEXT_EXTENSIONS = ['.txt', '.md', '.csv', '.json', '.log'];
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp'];
@@ -25,6 +26,7 @@ function getFileIcon(file: globalThis.File) {
 }
 
 export default function NewNotePage() {
+    const { data: session, isPending: isSessionPending } = authClient.useSession();
     const router = useRouter();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -34,6 +36,23 @@ export default function NewNotePage() {
     const [uploadedFile, setUploadedFile] = useState<globalThis.File | null>(null);
     const [extractError, setExtractError] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    // Redirect if not logged in
+    useEffect(() => {
+        if (!isSessionPending && !session) {
+            router.push('/login?next=/notes/new');
+        }
+    }, [session, isSessionPending, router]);
+
+    if (isSessionPending || !session) {
+        return (
+            <div className="page-container flex-col items-center justify-center min-h-[60vh]">
+                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2 }} className="text-blue">
+                    <Plus size={48} weight="bold" />
+                </motion.div>
+            </div>
+        );
+    }
 
     async function processFile(file: globalThis.File) {
         setUploadedFile(file);

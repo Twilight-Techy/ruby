@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { notes, concepts, quizzes, questions } from '@/lib/schema';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export async function POST(req: Request) {
     try {
+        const session = await auth.api.getSession({
+            headers: await headers()
+        });
+
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const userId = session.user.id;
         const { title, content } = await req.json();
 
         if (!title || !content) {
@@ -58,6 +69,7 @@ ${content}
 
         // Insert Note
         const [newNote] = await db.insert(notes).values({
+            userId,
             title,
             content,
             summary: extracted.summary,
@@ -77,6 +89,7 @@ ${content}
         // Insert Quiz
         if (extracted.quiz && extracted.quiz.questions?.length > 0) {
             const [newQuiz] = await db.insert(quizzes).values({
+                userId,
                 noteId: newNote.id,
                 title: extracted.quiz.title || "Review Quiz",
                 score: null
