@@ -3,7 +3,6 @@ import { db } from '@/lib/db';
 import { chatMessages, notes } from '@/lib/schema';
 import { eq, asc, and } from 'drizzle-orm';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 
 export async function GET(req: Request) {
     try {

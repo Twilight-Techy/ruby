@@ -3,7 +3,6 @@ import { db } from '@/lib/db';
 import { notes, quizzes } from '@/lib/schema';
 import { desc, eq } from 'drizzle-orm';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 
 export async function GET() {
     try {

@@ -4,7 +4,6 @@ import { quizzes, questions } from '@/lib/schema';
 import { eq, and } from 'drizzle-orm';
 import ActiveQuiz from './ActiveQuiz';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 
 interface PageProps {
     params: Promise<{ id: string }>;

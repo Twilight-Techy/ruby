@@ -44,10 +44,13 @@ export async function POST(req: Request) {
                 : `Extract ALL text content from this image. If the image contains handwritten notes, typed text, diagrams with labels, slides, or any other readable content, transcribe everything you can see. Organize the extracted text logically, preserving the original structure (headings, bullet points, paragraphs) as much as possible. If there are diagrams or charts, describe them briefly in brackets like [Diagram: description]. Return ONLY the extracted text content, nothing else.`;
 
             const geminiRes = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': process.env.GEMINI_API_KEY as string,
+                    },
                     body: JSON.stringify({
                         contents: [
                             {

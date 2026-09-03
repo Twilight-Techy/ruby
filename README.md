@@ -1,184 +1,141 @@
 <div align="center">
-
-<img src="src/app/icon.png" alt="Ruby Smart Notes" width="100" height="100" style="border-radius: 24px;" />
+  <img src="src/app/icon.png" alt="Ruby Smart Notes" width="88" height="88" style="border-radius: 20px;" />
+</div>
 
 # Ruby Smart Notes
 
-**Your AI study partner that never sleeps** 🚀
+Drop in your lecture notes — as text, a PDF, a slide deck, or a photo of your handwriting — and
+get back a summary, the key concepts explained, a quiz to test yourself, and a tutor that has
+read your material.
 
-[![Next.js](https://img.shields.io/badge/Next.js_16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Neon](https://img.shields.io/badge/Neon_Postgres-00E5A0?style=for-the-badge&logo=postgresql&logoColor=black)](https://neon.tech/)
-[![Gemini](https://img.shields.io/badge/Gemini_AI-8B5CF6?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
-
-*Drop in your lecture notes. Walk out with a summary, key concepts, a quiz, and an AI tutor that knows your material.*
-
-</div>
+Built with Next.js 16, Neon Postgres, and Gemini 2.5 Flash.
 
 ---
 
-## 🔥 What It Does
+## Why it takes photos
 
-Tired of re-reading your notes for hours? **Ruby does the heavy lifting.**
+The hard part of a study tool isn't the summarising, it's the input. Real notes are rarely clean
+text: they're a lecture PDF, a slide deck the lecturer shared, or a page of handwriting
+photographed on a phone.
 
-- 📝 **Paste or upload** your notes (text, PDF, Word, PowerPoint, images, handwriting — anything)
-- 🤖 **Gemini AI** reads them and instantly spits out:
-  - A crisp **summary**
-  - A list of **key concepts** with explanations
-  - A **5-question quiz** to test yourself
-- 💬 **Chat with your notes** — ask anything, and the AI answers using your material as context
-- 🔐 Everything is **private to your account** — multi-tenant, locked tight
+So extraction is its own route (`/api/extract`) with a path per input type:
 
----
-
-## ✨ Feature Highlights
-
-| 🎯 Feature | 💡 What it means for you |
+| Input | Handled by |
 |---|---|
-| **AI Summarization** | The most important ideas, distilled into one paragraph |
-| **Key Concepts** | Auto-extracted terms with plain-English explanations |
-| **Auto Quiz** | Test yourself immediately after every note you create |
-| **AI Chat** | Like having a tutor who read your notes before you did |
-| **Persistent Chat** | Conversations are saved — pick up exactly where you left off |
-| **OCR & File Parsing** | Photos of handwritten notes? Uploaded PDFs? No problem |
-| **Light + Dark Mode** | Your eyes will thank you |
-| **100% Mobile Friendly** | Study from anywhere, on any device |
+| `.txt` `.md` `.csv` `.json` | Read directly, no model call |
+| `.png` `.jpg` `.webp` `.pdf` | Gemini Vision reads the page, including handwriting |
+| `.docx` `.pptx` `.xlsx` | `officeparser` pulls the text out |
 
----
+Plain text skips the model entirely — no reason to spend a call on a file that's already
+readable.
 
-## 🛠️ Built With
+## What comes back
 
-<div align="center">
+One pass over the extracted text produces three things, each stored separately so they can be
+revisited without re-running the model:
 
-| Layer | Tech |
+- a **summary** on the note itself
+- **key concepts**, each with a plain-English explanation
+- a **five-question quiz** with options and the correct index
+
+Then `/api/chat` answers questions with the note's content as context, and the conversation
+persists — so you can close the tab and pick the thread back up.
+
+## Data model
+
+```
+notes ─┬─ concepts        (cascade delete)
+       ├─ quizzes ── questions
+       └─ chat_messages
+```
+
+Everything hangs off `notes` with `onDelete: 'cascade'`, so deleting a note takes its concepts,
+quizzes, questions, and chat history with it rather than leaving orphans.
+
+## Multi-tenancy
+
+Every route resolves the session first and returns `401` without one. Anything addressed by id
+then re-checks ownership against the session user before touching it:
+
+```ts
+const note = await db.select()
+  .from(notes)
+  .where(and(eq(notes.id, noteId), eq(notes.userId, session.user.id)))
+  .limit(1);
+
+if (note.length === 0) {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+}
+```
+
+Knowing a note's UUID isn't enough to read or chat with it — the row has to belong to you.
+
+## Stack
+
+| Layer | Choice |
 |---|---|
-| Framework | Next.js 16 (App Router + Turbopack) |
+| Framework | Next.js 16, App Router, Turbopack |
 | Language | TypeScript |
-| Database | Neon Serverless Postgres |
-| ORM | Drizzle ORM |
-| Auth | Neon Auth (email + Google OAuth) |
-| AI | Google Gemini 2.5 Flash |
-| Office Files | officeparser |
-| Animations | Framer Motion |
-| Icons | Phosphor Icons |
-| Styling | Vanilla CSS (glassmorphism) |
-
-</div>
+| Database | Neon serverless Postgres |
+| ORM | Drizzle |
+| Auth | Neon Auth — email and Google OAuth |
+| Model | Gemini 2.5 Flash, including Vision for OCR |
+| Office files | officeparser |
+| UI | Vanilla CSS, Framer Motion, Phosphor Icons |
 
 ---
 
-## 🚀 Run It Yourself
+## Running it
 
-### You'll need
-
-- Node.js 18+
-- A [Neon](https://neon.tech/) account (free tier works great)
-- A [Google AI Studio](https://aistudio.google.com/) API key
-
-### 1. Clone & install
+Needs Node 18+, a [Neon](https://neon.tech/) project, and a
+[Google AI Studio](https://aistudio.google.com/) key.
 
 ```bash
-git clone https://github.com/twilight-techy/ruby.git
-cd ruby
 npm install
 ```
 
-### 2. Set your secrets
-
-Create `.env.local` in the project root:
+Create `.env.local`:
 
 ```env
-# From your Neon project dashboard
-DATABASE_URL="postgresql://..."
-
-# From Google AI Studio
-GEMINI_API_KEY="AIza..."
-
-# From Neon Auth provisioning
+DATABASE_URL="postgresql://..."                # Neon dashboard
+GEMINI_API_KEY="AIza..."                       # Google AI Studio
 NEON_AUTH_BASE_URL="https://<endpoint>.neonauth.<region>.aws.neon.tech/<db>/auth"
-NEON_AUTH_COOKIE_SECRET="a-random-secret-at-least-32-chars-long"
-
-# Your local dev URL
+NEON_AUTH_COOKIE_SECRET="at-least-32-random-characters"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-### 3. Push the schema
+Push the schema and start:
 
 ```bash
 npx drizzle-kit push
-```
-
-### 4. Fire it up 🔥
-
-```bash
 npm run dev
 ```
 
-Visit **[http://localhost:3000](http://localhost:3000)** and start studying smarter.
-
----
-
-## 📁 Project Structure
+## Layout
 
 ```
-src/
-├── app/
-│   ├── api/
-│   │   ├── auth/[...path]/   → Neon Auth handler
-│   │   ├── chat/             → AI chat + persistent history
-│   │   ├── dashboard/        → User stats
-│   │   ├── extract/          → OCR (Gemini Vision + officeparser)
-│   │   ├── notes/            → Note CRUD
-│   │   └── quizzes/          → Quiz scoring
-│   ├── login/                → Auth page (email + Google)
-│   ├── notes/
-│   │   ├── new/              → Create a note
-│   │   └── [id]/             → Note workspace (AI panel + chat)
-│   ├── quizzes/[id]/         → Active quiz experience
-│   └── page.tsx              → Dashboard
-├── lib/
-│   ├── auth.ts               → Server auth
-│   ├── auth-client.ts        → Client auth
-│   ├── authFetch.ts          → Auto-redirect on 401
-│   ├── db.ts                 → Drizzle client
-│   ├── schema.ts             → DB schema
-│   └── ThemeProvider.tsx     → Light/dark mode
-└── proxy.ts                  → Route protection middleware
+src/app/api/
+  auth/[...path]/   Neon Auth handler
+  extract/          OCR and file parsing
+  notes/            note CRUD, and the summary/concepts/quiz generation
+  chat/             chat over a note, with history
+  quizzes/score/    scoring
+  dashboard/        user stats
+src/app/
+  notes/[id]/       note workspace — AI panel and chat
+  quizzes/[id]/     the quiz run
+src/lib/
+  schema.ts         Drizzle schema
+  auth.ts           server-side session
+  authFetch.ts      client fetch that redirects on 401
+src/proxy.ts        route protection
 ```
 
----
+## Deploying
 
-## 📝 Supported File Types
+Import into Vercel, set the same environment variables, and point `NEXT_PUBLIC_APP_URL` at the
+live domain.
 
-| What you have | How Ruby reads it |
-|---|---|
-| `.txt` `.md` `.csv` `.json` | Reads directly in the browser — instant |
-| `.png` `.jpg` `.jpeg` `.webp` | Gemini Vision extracts all visible text |
-| `.pdf` | Gemini Vision reads every page |
-| `.docx` `.pptx` `.xlsx` `.doc` | officeparser pulls the text content |
-| 📸 Handwritten notes photo | Gemini Vision transcribes your handwriting |
+## License
 
----
-
-## 🌐 Deploy to Production
-
-1. Push to GitHub
-2. Import into [Vercel](https://vercel.com/) (or any Next.js-compatible host)
-3. Add your `.env.local` variables to your hosting provider's environment settings
-4. Update `NEXT_PUBLIC_APP_URL` to your live domain
-
----
-
-## 📄 License
-
-[MIT](LICENSE) — free to use, modify, and build on.
-
----
-
-<div align="center">
-
-Made with ❤️ + 🤖 + ☕
-
-**[⭐ Star this repo if it helped you study smarter!](https://github.com/twilight-techy/ruby)**
-
-</div>
+MIT.

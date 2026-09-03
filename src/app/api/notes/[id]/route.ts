@@ -3,7 +3,6 @@ import { db } from '@/lib/db';
 import { notes } from '@/lib/schema';
 import { eq, and } from 'drizzle-orm';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 
 export async function PATCH(
     req: Request,

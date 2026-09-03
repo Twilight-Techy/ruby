@@ -4,7 +4,6 @@ import { desc, eq, and } from 'drizzle-orm';
 import { CaretLeft, Exam, Play, SignIn } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export default async function QuizzesPage() {
